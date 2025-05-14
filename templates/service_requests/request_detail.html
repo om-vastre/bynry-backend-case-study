@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Service Request Details</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h4>{{ service_request.title }}</h4>
+                    <p class="text-muted">
+                        Created: {{ service_request.created_at|date:"M d, Y H:i" }} |
+                        Updated: {{ service_request.updated_at|date:"M d, Y H:i" }}
+                    </p>
+                    <span class="badge {% if service_request.status == 'pending' %}bg-warning{% elif service_request.status == 'in_progress' %}bg-info{% else %}bg-success{% endif %}">
+                        {{ service_request.get_status_display }}
+                    </span>
+                </div>
+
+                <div class="mb-4">
+                    <h5>Description</h5>
+                    <p>{{ service_request.description }}</p>
+                </div>
+
+                {% if service_request.attachment %}
+                    <div class="mb-4">
+                        <h5>Attachment</h5>
+                        <a href="{{ service_request.attachment.url }}" class="btn btn-outline-primary" target="_blank">
+                            View Attachment
+                        </a>
+                    </div>
+                {% endif %}
+
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.status.id_for_label }}" class="form-label">Update Status</label>
+                        {{ form.status }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Status</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
